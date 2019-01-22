@@ -57,6 +57,8 @@ alias sleep="$_CMD_SLEEP" whoami="$_CMD_WHOAMI" cat="$_CMD_CAT"\
       awk="$_CMD_AWK" tar="$_CMD_TAR" alternatives="$_CMD_ALTERNATIVES"
 # Force applications to use the default language for output
 export LC_ALL=C
+# Set default mask
+umask 0002
 ##
 ## Function declarations -------------------------------------------------------
 stdmsg() { #@ DESCRIPTION: Print messages to STDOUT
@@ -215,11 +217,23 @@ installShProfile() { #@ DESCRIPTION: Installs shell profile w/environment provi-
     # Try to write to $_SHPRFLENME shell profile saving attempt's output
     out=$({ cat >"$_SHPRFLENME" <<EOF
 ##
-## Add JAVA_HOME to environment (preserve any previously set value)
-## Replace assignment's LHS w/desired java home's full path.
-JAVA_HOME=\${JAVA_HOME:-$_JDKPRNTDIR/$_JDKPYLDVRS}
+## Add below vars to environment ----------------------------------------------
+## Append to PATH if value not available
+case :$PATH: in
+    *":$_JDKPRNTDIR/$_JDKPYLDVRS/bin:"*) ;;
+    *) PATH=$PATH:$_JDKPRNTDIR/$_JDKPYLDVRS/bin ;;
+esac
+case :$PATH: in
+    *":$_JDKPRNTDIR/$_JDKPYLDVRS/jre/bin:"*) ;;
+    *) PATH=$PATH:$_JDKPRNTDIR/$_JDKPYLDVRS/jre/bin ;;
+esac
+## Replace LHS of the assignment w/desired value
+JAVA_HOME="$_JDKPRNTDIR/$_JDKPYLDVRS"
+JRE_HOME="$_JDKPRNTDIR/$_JDKPYLDVRS/jre"
+CLASSPATH=".:$_JDKPRNTDIR/$_JDKPYLDVRS/lib/tools.jar:\\
+$_JDKPRNTDIR/$_JDKPYLDVRS/jre/lib/rt.jar"
 ## Export to all subshells
-export JAVA_HOME
+export PATH JAVA_HOME JRE_HOME CLASSPATH
 EOF
           } 2>&1)
     if [ $? -ne 0 ]; then ## if write failed, finish w/errors
