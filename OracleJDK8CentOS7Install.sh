@@ -219,18 +219,18 @@ installShProfile() { #@ DESCRIPTION: Installs shell profile w/environment provi-
 ##
 ## Add below vars to environment ----------------------------------------------
 ## Append to PATH if value not available
-case :$PATH: in
+case :\$PATH: in
     *":$_JDKPRNTDIR/$_JDKPYLDVRS/bin:"*) ;;
-    *) PATH=$PATH:$_JDKPRNTDIR/$_JDKPYLDVRS/bin ;;
+    *) PATH=\$PATH:$_JDKPRNTDIR/$_JDKPYLDVRS/bin ;;
 esac
-case :$PATH: in
+case :\$PATH: in
     *":$_JDKPRNTDIR/$_JDKPYLDVRS/jre/bin:"*) ;;
-    *) PATH=$PATH:$_JDKPRNTDIR/$_JDKPYLDVRS/jre/bin ;;
+    *) PATH=\$PATH:$_JDKPRNTDIR/$_JDKPYLDVRS/jre/bin ;;
 esac
 ## Replace LHS of the assignment w/desired value
 JAVA_HOME="$_JDKPRNTDIR/$_JDKPYLDVRS"
 JRE_HOME="$_JDKPRNTDIR/$_JDKPYLDVRS/jre"
-CLASSPATH=".:$_JDKPRNTDIR/$_JDKPYLDVRS/lib/tools.jar:\\
+CLASSPATH=".:$_JDKPRNTDIR/$_JDKPYLDVRS/lib/tools.jar:\
 $_JDKPRNTDIR/$_JDKPYLDVRS/jre/lib/rt.jar"
 ## Export to all subshells
 export PATH JAVA_HOME JRE_HOME CLASSPATH
