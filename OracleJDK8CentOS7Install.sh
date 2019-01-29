@@ -121,7 +121,7 @@ setJdkPyldVers() { #@ DESCRIPTION: Sets global _JDKPYLDVRS with payload's JDK8
         fi
         vers=$_RPLY              ## Store read version
     done <<EOF
-$({ tail -n +$_PYLDLINENM "$0" |     ## Get payload reading $0 after tagged line
+$({ tail -n +$_PYLDLINENM "$0" |     ## Get pyld reading $0 after tagged line
         tar -tvzf -; } 2>/dev/null | ## Accept Oracle's JDK8 compressed tarball
       awk \
 '/^d.*jdk1.8.0_[0-9]{1,3}/{      ## Get only matching directory entries from tar
@@ -192,7 +192,7 @@ installJdk8() { #@ DESCRIPTION: Installs Oracle's JdK8 from payload
         sleep 0.01               ## Wait some time before next line
     done <<EOF
 $({ tail -n +$_PYLDLINENM "$0" | 
-       tar -C "$_JDKPRNTDIR" -xvzf -; } 2>/dev/null || 
+       tar -C "$_JDKPRNTDIR" -oxvzf -; } 2>/dev/null || 
   printf "STATUS: %d" $?)
 EOF
     ## Coprocess starts reading $0 from payload first line onward, sending out-
